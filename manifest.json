@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "A simple privacy screen overlay tool",
 
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["storage","activeTab","scripting"],
 
     "action": {
     "default_popup": "popup/popup.html",
