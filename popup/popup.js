@@ -3,35 +3,28 @@ const statusText = document.getElementById("status");
 
 let isOn = false;
 
-
-// 同步 content 狀態
+//syncState()在popup開啟時，向content.js要目前的狀態
 function syncState() {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+
         if (!tab) return;
-        chrome.tabs.sendMessage(
-            tab.id,
-            { action: "getState" },
-            (res) => {
 
-                // ① Chrome extension 通訊失敗（content script 不存在 / 未載入）
-                if (chrome.runtime.lastError || !res) {
-                    isOn = false;
-                    updateUI();
-                    return;
-                }
+        chrome.tabs.sendMessage(tab.id, { action: "getState" }, (res) => {
 
-                // ② 正常拿到 state
-                isOn = res.isOn;
-                updateUI();
-            }
-        );
+            if (chrome.runtime.lastError || !res) return;
+
+            isOn = res.isOn;
+            updateUI();
+        });
     });
 }
 
-// 點擊切換
+//抓使用者點擊開關的事件，並傳送訊息給content.js，讓content.js去切換遮罩狀態
 switchEl.addEventListener("click", () => {
 
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+
+        if (!tab) return;
 
         chrome.tabs.sendMessage(tab.id, { action: "toggle" }, (res) => {
 
@@ -43,7 +36,7 @@ switchEl.addEventListener("click", () => {
     });
 });
 
-// UI 更新
+//根據isOn的值，更新UI
 function updateUI() {
     if (isOn) {
         switchEl.classList.add("on");
@@ -54,5 +47,5 @@ function updateUI() {
     }
 }
 
-// 初始化
+
 syncState();
