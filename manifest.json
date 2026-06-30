@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Screen Veil",
+    "version": "1.0",
+    "description": "A simple privacy screen overlay tool",
+
+    "permissions": ["storage","activeTab","scripting"],
+
+    "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Screen Veil"
+    },
+
+    "background": {
+    "service_worker": "background.js"
+    },
+
+    "content_scripts": [
+    {
+    "matches": ["<all_urls>"],
+    "js": ["content/content.js"],
+    "css": ["content/content.css"]
+    }
+    ]
+}
+
+
