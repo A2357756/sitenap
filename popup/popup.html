@@ -9,7 +9,12 @@
     <div class="container">
     <h3>Screen Veil</h3>
 
-    <div class="switch" id="switch">
+    <div class="duration-row">
+        <label for="duration">持續時間：<span id="duration-value">5</span> 分鐘</label>
+        <input type="range" id="duration" min="1" max="10" step="1" value="5">
+    </div>
+
+    <div class="switch small" id="switch">
         <div class="knob"></div>
     </div>
 
