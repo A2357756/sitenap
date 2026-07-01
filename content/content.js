@@ -10,6 +10,7 @@ let ani = null;
 
 function setState(partial) {
     // 用...展開運算子，將partial的值覆蓋到state上
+    
     state = {
         ...state,
         ...partial
@@ -89,6 +90,10 @@ function createAnimation() {
     ani = document.createElement("div");
     ani.id = "screen-veil-animation";
 
+    const circle = document.createElement("div");
+    circle.className = "pulse-circle";
+
+    ani.appendChild(circle);
     document.body.appendChild(ani);
 
     requestAnimationFrame(() => {

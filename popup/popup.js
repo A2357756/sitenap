@@ -1,17 +1,21 @@
+// Popup UI - 控制 Screen Veil 開關與同步狀態
 const switchEl = document.getElementById("switch");
 const statusText = document.getElementById("status");
 
 let isOn = false;
 
-//syncState()在popup開啟時，向content.js要目前的狀態
+
+// 問 content script 取得目前狀態
 function syncState() {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
 
-        if (!tab) return;
-
         chrome.tabs.sendMessage(tab.id, { action: "getState" }, (res) => {
 
-            if (chrome.runtime.lastError || !res) return;
+            if (chrome.runtime.lastError || !res) {
+                isOn = false;
+                updateUI();
+                return;
+            }
 
             isOn = res.isOn;
             updateUI();
@@ -19,12 +23,10 @@ function syncState() {
     });
 }
 
-//抓使用者點擊開關的事件，並傳送訊息給content.js，讓content.js去切換遮罩狀態
+// 點擊開關 → 切換狀態
 switchEl.addEventListener("click", () => {
 
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-
-        if (!tab) return;
 
         chrome.tabs.sendMessage(tab.id, { action: "toggle" }, (res) => {
 
@@ -36,7 +38,7 @@ switchEl.addEventListener("click", () => {
     });
 });
 
-//根據isOn的值，更新UI
+// 更新 UI 顯示
 function updateUI() {
     if (isOn) {
         switchEl.classList.add("on");
@@ -46,6 +48,7 @@ function updateUI() {
         statusText.textContent = "Status: OFF";
     }
 }
+
 
 
 syncState();

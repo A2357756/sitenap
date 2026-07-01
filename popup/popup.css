@@ -45,6 +45,7 @@ h3 {
 /* ON 狀態 */
 .switch.on {
     background: #47a5ed;
+    box-shadow: 0 0 10px rgba(71,165,237,0.6);
 }
 
 .switch.on .knob {
@@ -53,5 +54,5 @@ h3 {
 
 #status {
     font-size: 12px;
-    opacity: 0.8;
+    opacity: 0.7;
 }
