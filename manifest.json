@@ -21,6 +21,12 @@
     "js": ["content/content.js"],
     "css": ["content/content.css"]
     }
+    ],
+    "web_accessible_resources": [
+    {
+        "resources": ["icons/cat_playing.svg"],
+        "matches": ["<all_urls>"]
+    }
     ]
 }
 

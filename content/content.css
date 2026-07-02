@@ -8,7 +8,7 @@
 
     z-index: 999998;
 
-    pointer-events: none;
+    pointer-events: auto;
 }
 /*呼吸圈*/
 #screen-veil-animation {
@@ -50,13 +50,6 @@
     animation: spin 1s linear infinite;
 }
 
-.cat {
-    width: 80px;
-    height: 80px;
-    background: white;
-    background-size: contain;
-
-}
 
 @keyframes appear {
     from {
@@ -116,4 +109,9 @@
     25%  { opacity: 1; }
     75%  { opacity: 1; }
     100% { opacity: 0; transform: translateY(-16px); }
+}
+
+.cat-img {
+    width: 500px;
+    height: 500px;
 }

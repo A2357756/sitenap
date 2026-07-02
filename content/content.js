@@ -4,7 +4,8 @@ let state = {
     animation: "pulse",
     duration: 5,     // 使用者選擇的持續分鐘數(預設5分鐘)
     endTime: null ,   // 這次開啟預計結束的絕對時間戳(ms)，沒開啟時為 null
-    visualMode: "breathe" // 視覺模式，預設為呼吸燈模式，另一個選項是貓咪模式
+    visualMode: "breathe", // 視覺模式，預設為呼吸燈模式，另一個選項是貓咪模式
+    locked: false
 };
 
 let mask = null;
@@ -83,16 +84,17 @@ function createMask() {
     mask = document.createElement("div");
     //給這個區塊ID
     mask.id = "screen-veil-mask";
-
     //先把透明度設為0
     mask.style.opacity = "0";
     //把mask丟進body裡面
     document.body.appendChild(mask);
     //requestAnimationFrame強制等畫面更新再改透明度到1
+    const el = mask; // 凍結參照，避免外層 mask 被改成 null 之後這裡還在用舊的
+
     requestAnimationFrame(() => {
-        //強制瀏覽器重新計算樣式，讓transition可以生效
-        void mask.offsetWidth;
-        mask.style.opacity = "1";
+        if (!el.isConnected) return; // 如果這個元素已經被移除了，就不要再對它做任何操作
+        void el.offsetWidth;
+        el.style.opacity = "1";
     });
 }
 function removeMask() {
@@ -148,6 +150,11 @@ function createAnimation() {
     <g class="cloud-zzz" style="animation-delay:2.1s"><text x="460" y="75" fill="#9a9da3" font-size="30" font-family="sans-serif" font-weight="600">Z</text></g>
     </svg>`;
     }
+    if (state.visualMode === "cat") {
+    child = document.createElement("img");
+    child.src = chrome.runtime.getURL("icons/cat_playing.svg");
+    child.className = "cat-img";
+    }
     ani.appendChild(child);
     document.body.appendChild(ani);
     requestAnimationFrame(() => {
@@ -186,6 +193,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
                 endTime: Date.now() + minutes * 60 * 1000
             });
         } else {
+            if (state.locked){
+                sendResponse({ isOn: state.isOn, endTime: state.endTime, duration: state.duration });
+                {return;} // 如果是鎖定狀態，就不允許手動關掉
+            }
             // 開 → 關（手動關掉）：清掉 endTime，取消倒數
             setState({ isOn: false, endTime: null });
         }
@@ -201,6 +212,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         switchVisualMode();
         sendResponse({ visualMode: state.visualMode });
 
+    }
+    if (msg.action === "setLocked") {
+        if (state.isOn && state.locked && msg.locked === false) {
+            sendResponse({ locked: state.locked });
+            return;
+        } 
+        setState({ locked: msg.locked });
+        sendResponse({ locked: state.locked });
     }
 }); 
 
@@ -224,7 +243,7 @@ chrome.storage.local.get(["screenVeil"], (result) => {
 
 // 抓escape鍵，按下去就呼叫setState把isOn改成false，然後就會觸發render去關掉UI
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && state.isOn) {
+    if (e.key === "Escape" && state.isOn && !state.locked) {
         setState({ isOn: false, endTime: null });
     }
 });
@@ -238,3 +257,9 @@ chrome.storage.onChanged.addListener((changes, area) => {
         render();
     }
 });
+
+document.addEventListener("wheel", (e) => {
+    if (mask) {
+        e.preventDefault();
+    }
+}, { passive: false });

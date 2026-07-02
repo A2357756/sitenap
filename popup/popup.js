@@ -3,12 +3,13 @@ const switchEl = document.getElementById("switch");
 const statusText = document.getElementById("status");
 const durationEl = document.getElementById("duration");
 const durationValueEl = document.getElementById("duration-value");
-const modeSwitchEl = document.getElementById("mode-switch");
+const lockCheckbox = document.getElementById("lock-checkbox");
 
 let isOn = false;
 let endTime = null;
 let countdownTimer = null;
 let visualMode = "breathe";
+let locked = false;
 
 // 拖拉桿時即時更新旁邊顯示的數字
 durationEl.addEventListener("input", () => {
@@ -41,6 +42,10 @@ function syncState() {
                 durationEl.value = String(res.duration);
                 durationValueEl.textContent = String(res.duration);
             }
+            if (typeof res.locked === "boolean") {
+            locked = res.locked;
+            lockCheckbox.checked = locked;
+            }
             updateModeUI()
             updateUI();
         });
@@ -66,24 +71,29 @@ switchEl.addEventListener("click", () => {
 });
 
 //切換mode
-modeSwitchEl.addEventListener("click", () => {
-    const newMode = visualMode === "breathe" ? "cloud" : "breathe";
+const modeButtons = document.querySelectorAll(".mode-btn");
+modeButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+        const newMode = btn.dataset.mode;
 
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-        chrome.tabs.sendMessage(tab.id, { action: "setVisualMode", visualMode: newMode }, (res) => {
-            if (chrome.runtime.lastError || !res) return;
-            visualMode = res.visualMode;
-            updateModeUI();
+        chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+            chrome.tabs.sendMessage(tab.id, { action: "setVisualMode", visualMode: newMode }, (res) => {
+                if (chrome.runtime.lastError || !res) return;
+                visualMode = res.visualMode;
+                updateModeUI();
+            });
         });
     });
 });
 
 function updateModeUI() {
-    if (visualMode === "cloud") {
-        modeSwitchEl.classList.add("on");
-    } else {
-        modeSwitchEl.classList.remove("on");
-    }
+    modeButtons.forEach((btn) => {
+        if (btn.dataset.mode === visualMode) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
 }
 
 // 更新 UI 顯示
@@ -125,6 +135,17 @@ function startCountdownLoop() {
     countdownTimer = setInterval(updateCountdownText, 1000);
 }
 
+lockCheckbox.addEventListener("change", () => {
+    const newLocked = lockCheckbox.checked;
+
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+        chrome.tabs.sendMessage(tab.id, { action: "setLocked", locked: newLocked }, (res) => {
+            if (chrome.runtime.lastError || !res) return;
+            locked = res.locked;
+            lockCheckbox.checked = locked;
+        });
+    });
+});
 
 
 syncState();
