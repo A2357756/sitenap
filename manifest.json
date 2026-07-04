@@ -6,11 +6,6 @@
 
     "permissions": ["storage","activeTab","scripting"],
 
-    "action": {
-    "default_popup": "popup/popup.html",
-    "default_title": "Screen Veil"
-    },
-
     "background": {
     "service_worker": "background.js"
     },
@@ -24,10 +19,25 @@
     ],
     "web_accessible_resources": [
     {
-        "resources": ["icons/cat_playing.svg"],
+        "resources": ["assets/cat_playing.svg"],
         "matches": ["<all_urls>"]
     }
-    ]
+    ],
+    "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+    },
+    "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Screen Veil",
+    "default_icon": {
+        "16": "assets/icon16.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
+    }
+    }
 }
+
 
 

@@ -147,5 +147,25 @@ lockCheckbox.addEventListener("change", () => {
     });
 });
 
+chrome.storage.onChanged.addListener((changes, area) => { 
+    if (area === "local" && changes.screenVeil) {
+        if (changes.screenVeil.newValue) {
+            const newState = changes.screenVeil.newValue;
+
+            isOn = newState.isOn;
+            endTime = newState.endTime || null;
+            visualMode = newState.visualMode || "breathe";
+            locked = newState.locked || false;
+
+            if (newState.duration) {
+                durationEl.value = String(newState.duration);
+                durationValueEl.textContent = String(newState.duration);
+            }
+
+            updateModeUI();
+            updateUI();
+        }
+    }
+});
 
 syncState();

@@ -115,3 +115,14 @@
     width: 500px;
     height: 500px;
 }
+
+#screen-veil-countdown {
+    position: fixed;
+    bottom: 100px;
+    left: 100px;
+    z-index: 999999;
+    color: white;
+    font-family: monospace;
+    font-size: 40px;
+    opacity: 0.85;
+}
