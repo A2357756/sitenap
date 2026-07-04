@@ -192,7 +192,7 @@ function updateCountdownText() {
 
 // 同步到 storage(儲存在本地電腦的永久記憶體)
 function syncStorage() {
-    chrome.storage.local.set({ screenVeil: state });
+    chrome.storage.local.set({ sitenap: state });
 }
 
 // 讀取popup message
@@ -247,9 +247,9 @@ function switchVisualMode() {
 
 
 // init抓本地儲存的狀態 有的話就覆蓋掉state，然後重新渲染畫面
-chrome.storage.local.get(["screenVeil"], (result) => {
-    if (result.screenVeil) {
-        state = result.screenVeil;
+chrome.storage.local.get(["sitenap"], (result) => {
+    if (result.sitenap) {
+        state = result.sitenap;
     }
     render();
 });
@@ -264,8 +264,8 @@ document.addEventListener("keydown", (e) => {
 // 全分頁同步 抓到storage的變化就會觸發onChanged事件，然後把新的值覆蓋掉state，並重新渲染畫面
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
-    if (changes.screenVeil) {
-        state = changes.screenVeil.newValue;
+    if (changes.sitenap) {
+        state = changes.sitenap.newValue;
         render();
     }
 });

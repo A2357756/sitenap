@@ -1,4 +1,4 @@
-# Screen Veil（螢幕遮罩工具）
+# SiteNap（螢幕遮罩工具）
 
 一個 Chrome 擴充功能（Manifest V3），在瀏覽器畫面上疊加全螢幕遮罩，搭配可切換的視覺動畫，用於強制休息 / 專注防干擾情境。以五天的小型專案節奏開發。
 
@@ -8,13 +8,13 @@
 
 1. 下載或 clone 這個 repo 到本機
 ```bash
-   git clone https://github.com/a2357756/screen-veil.git
+   git clone https://github.com/a2357756/sitenap.git
 ```
 2. 打開 Chrome，網址列輸入 `chrome://extensions`，或者點選擴充功能內的「管理擴充功能」
 3. 開啟右上角的「開發人員模式」
 4. 點擊「載入未封裝項目」
-5. 選擇剛剛下載的 `screen-veil` 資料夾（選到包含 `manifest.json` 的那一層）
-6. 擴充功能列表會出現 Screen Veil，點擊工具列上的圖示即可開始使用
+5. 選擇剛剛下載的 `sitenap` 資料夾（選到包含 `manifest.json` 的那一層）
+6. 擴充功能列表會出現 SiteNap，點擊工具列上的圖示即可開始使用
 
 > 若 Chrome 顯示「已停用具有開發人員模式的擴充功能」的警告，屬於正常提示，點擊「保留」即可繼續使用。
 
@@ -50,7 +50,7 @@
 ## 專案結構
 
 ```
-Screen Veil
+Site Nap
 │
 ├── popup/          # popup UI（HTML / CSS / JS）
 ├── content/        # 遮罩與頁面控制邏輯（content script）
