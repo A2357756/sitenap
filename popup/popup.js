@@ -148,9 +148,9 @@ lockCheckbox.addEventListener("change", () => {
 });
 
 chrome.storage.onChanged.addListener((changes, area) => { 
-    if (area === "local" && changes.screenVeil) {
-        if (changes.screenVeil.newValue) {
-            const newState = changes.screenVeil.newValue;
+    if (area === "local" && changes.sitenap) {
+        if (changes.sitenap.newValue) {
+            const newState = changes.sitenap.newValue;
 
             isOn = newState.isOn;
             endTime = newState.endTime || null;

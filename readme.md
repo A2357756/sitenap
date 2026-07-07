@@ -4,19 +4,31 @@
 
 ## 安裝方式
 
-此專案尚未上架 Chrome Web Store，需要手動載入：
+此專案尚未上架擴充功能商店，需要手動載入。
+
+### Chrome
 
 1. 下載或 clone 這個 repo 到本機
 ```bash
-   git clone https://github.com/a2357756/sitenap.git
+   git clone https://github.com/A2357756/sitenap.git
 ```
-2. 打開 Chrome，網址列輸入 `chrome://extensions`，或者點選擴充功能內的「管理擴充功能」
+2. 打開 Chrome，網址列輸入 `chrome://extensions`
 3. 開啟右上角的「開發人員模式」
 4. 點擊「載入未封裝項目」
-5. 選擇剛剛下載的 `sitenap` 資料夾（選到包含 `manifest.json` 的那一層）
+5. 選擇 `SiteNap` 資料夾（選到包含 `manifest.json` 的那一層）
 6. 擴充功能列表會出現 SiteNap，點擊工具列上的圖示即可開始使用
 
-> 若 Chrome 顯示「已停用具有開發人員模式的擴充功能」的警告，屬於正常提示，點擊「保留」即可繼續使用。
+### Edge
+
+1. 下載或 clone 這個 repo 到本機（同上）
+2. 打開 Edge，網址列輸入 `edge://extensions`
+3. 開啟左下角的「開發人員模式」
+4. 點擊「載入解壓縮的擴充功能」
+5. 選擇 `SiteNap` 資料夾（選到包含 `manifest.json` 的那一層）
+6. 擴充功能列表會出現 SiteNap，點擊工具列上的圖示即可開始使用
+
+> 已在 Chrome、Edge 實際測試通過，理論上相容其他 Chromium 系瀏覽器（如 Brave、Opera）。
+> 若 Chrome/Edge 顯示「已停用具有開發人員模式的擴充功能」的警告，屬於正常提示，點擊「保留」即可繼續使用。
 
 ## 功能
 

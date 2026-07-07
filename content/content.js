@@ -265,7 +265,11 @@ document.addEventListener("keydown", (e) => {
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
     if (changes.sitenap) {
+        const oldVisualMode = state.visualMode; // 先記住舊的模式
         state = changes.sitenap.newValue;
+        if (state.visualMode !== oldVisualMode) {
+            switchVisualMode();   // 模式真的變了，才需要重繪
+        }
         render();
     }
 });
