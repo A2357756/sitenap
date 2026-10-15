@@ -249,13 +249,20 @@ function switchVisualMode() {
     });
 }
 
+// 讀取storage的值，決定要不要開UI
+chrome.runtime.sendMessage({ action: "whoAmI" }, (res) => {
+    const tabKey = `sitenap_${res.tabId}`;
 
-// init抓本地儲存的狀態 有的話就覆蓋掉state，然後重新渲染畫面
-chrome.storage.local.get(["sitenap"], (result) => {
-    if (result.sitenap) {
-        state = result.sitenap;
-    }
-    render();
+    chrome.storage.local.get([tabKey, "sitenap"], (result) => {
+        if (result[tabKey] && result[tabKey].isOn) {
+            myTabId = res.tabId;
+            isTabScoped = true;
+            state = result[tabKey];
+        } else if (result.sitenap) {
+            state = result.sitenap;
+        }
+        render();
+    });
 });
 
 // 抓escape鍵，按下去就呼叫setState把isOn改成false，然後就會觸發render去關掉UI
@@ -268,9 +275,11 @@ document.addEventListener("keydown", (e) => {
 // 全分頁同步 抓到storage的變化就會觸發onChanged事件，然後把新的值覆蓋掉state，並重新渲染畫面
 chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== "local") return;
-    if (changes.sitenap) {
+    if (changes.sitenap){
+        if (isTabScoped && state.isOn) return; // 如果是分頁專屬模式，且這個分頁已經開啟，就不要被其他分頁的變化覆蓋        
         const oldVisualMode = state.visualMode; // 先記住舊的模式
         state = changes.sitenap.newValue;
+        isTabScoped = false; // 變成全域模式
         if (state.visualMode !== oldVisualMode) {
             switchVisualMode();   // 模式真的變了，才需要重繪
         }
