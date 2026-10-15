@@ -192,7 +192,9 @@ function updateCountdownText() {
 
 // 同步到 storage(儲存在本地電腦的永久記憶體)
 function syncStorage() {
-    chrome.storage.local.set({ sitenap: state });
+     const key = isTabScoped ? `sitenap_${myTabId}` : "sitenap";
+    chrome.storage.local.set({ [key]: state });
+
 }
 
 // 讀取popup message
@@ -200,12 +202,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     //如果是切換開關(toggle)處理setState順便回傳最新的state給popup.js，讓popup.js更新UI
     if (msg.action === "toggle") {
         if (!state.isOn) {
+            myTabId = msg.myTabId;
+            isTabScoped = msg.scopeToTab;
             // 關 → 開：用 popup 傳來的 duration(沒傳就用上次存的值)算出結束時間
             const minutes = msg.duration || state.duration;
             setState({
                 isOn: true,
                 duration: minutes,
-                endTime: Date.now() + minutes * 60 * 1000
+                endTime: Date.now() + minutes * 60 * 1000,
             });
         } else {
             if (state.locked){
@@ -215,7 +219,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
             // 開 → 關（手動關掉）：清掉 endTime，取消倒數
             setState({ isOn: false, endTime: null });
         }
-        sendResponse({ isOn: state.isOn, endTime: state.endTime, duration: state.duration });
+        sendResponse({ isOn: state.isOn, endTime: state.endTime, duration: state.duration  });
     }
     //如果是詢問狀態(getState)回傳state給popup.js(只有初始化會問)
     if (msg.action === "getState") {

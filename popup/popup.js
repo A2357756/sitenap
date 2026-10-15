@@ -4,6 +4,7 @@ const statusText = document.getElementById("status");
 const durationEl = document.getElementById("duration");
 const durationValueEl = document.getElementById("duration-value");
 const lockCheckbox = document.getElementById("lock-checkbox");
+const scopeTabCheckbox = document.getElementById("scope-tab-checkbox");
 
 let isOn = false;
 let endTime = null;
@@ -59,8 +60,8 @@ switchEl.addEventListener("click", () => {
 
         // 只有從「關」切到「開」才需要帶 duration，關掉不需要
         const msg = isOn
-            ? { action: "toggle" }
-            : { action: "toggle", duration: parseInt(durationEl.value, 10) };
+            ? { action: "toggle", scopeToTab: scopeTabCheckbox.checked, myTabId: tab.id }
+            : { action: "toggle", duration: parseInt(durationEl.value, 10), scopeToTab: scopeTabCheckbox.checked, myTabId: tab.id };
         chrome.tabs.sendMessage(tab.id, msg, (res) => {
             if (chrome.runtime.lastError || !res) return;
             isOn = res.isOn;

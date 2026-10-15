@@ -33,7 +33,10 @@
         "48": "assets/icon48.png",
         "128": "assets/icon128.png"
     }
-    }
+    },
+    "background": {
+    "service_worker": "background.js"
+}
 }
 
 
